@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+mongoose.connect('mongodb://localhost/fetcher', {
+  useMongoClient: true
+});
 
 let repoSchema = mongoose.Schema({
   // TODO: your schema here!
+  repo_id: {type: String, unique: true},
   username: String,
-  repo_id: String,
   repo_name: String,
   html_url: String,
   created_at: Date,
@@ -13,24 +15,25 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-//when this and sample.save run, it creates a new document in the collection
-// let sample = new Repo({
-//   username: 'Example',
-//   repo_id: 'String',
-//   repo_name: 'String',
-//   html_url: 'String',
-//   created_at: '04-09-2015',
-//   stargazer_count: 5,
-// })
+Repo.on('index', function(err){
+  if (err) console.log(err);
+});
 
-// sample.save(function(err, sample) {
-//   if (err) console.log(err);
-// })
+let save = (body) => {
+  body.forEach(singleRepo => {
+    let sample = new Repo({
+      repo_id: singleRepo.id,
+      username: singleRepo.owner.login,
+      repo_name: singleRepo.name,
+      html_url: singleRepo.html_url,
+      created_at: singleRepo.created_at,
+      stargazer_count: singleRepo.stargazers_count,
+    });
 
-let save = (/* TODO */) => {
-  // TODO: Your code here
-  // This function should save a repo or repos to
-  // the MongoDB
+     sample.save(function(err, sample) {
+      if (err) console.log(err);
+    });
+  });
 }
 
 module.exports.save = save;
