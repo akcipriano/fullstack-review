@@ -20,7 +20,7 @@ class App extends React.Component {
       url: '/repos',
       data: {username: term},
       success: (data) => {
-        console.log('Success data', data);
+        console.log(data);
       }
     });
   }

@@ -15,12 +15,12 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-Repo.on('index', function(err){
-  if (err) console.log(err);
-});
-
 let save = (body) => {
+
   body.forEach(singleRepo => {
+    Repo.on('index', function(err){
+      if (err) console.log(err);
+    });
     let sample = new Repo({
       repo_id: singleRepo.id,
       username: singleRepo.owner.login,
@@ -29,7 +29,6 @@ let save = (body) => {
       created_at: singleRepo.created_at,
       stargazer_count: singleRepo.stargazers_count,
     });
-
      sample.save(function(err, sample) {
       if (err) console.log(err);
     });

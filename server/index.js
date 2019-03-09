@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const getReposByUsername = require('../helpers/github.js');
-const save = require('../database/index.js');
+const getData = require('../helpers/github.js');
+const insertToMongo = require('../database/index.js');
 let app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -14,8 +14,24 @@ app.post('/repos', function (req, res) {
   // This route should take the github username provided
   // and get the repo information from the github API, then
   // save the repo information in the database
-  getReposByUsername.getReposByUsername(req.body.username);
-  res.send('!!');
+  var username = req.body.username;
+  getData.getReposByUsername(username, (err, res, body) => {
+    if (err) throw err;
+    if(!err && res.statusCode === 200) {
+      var data = JSON.parse(body);
+
+      console.log('REPO ID--------------------------------------->', data[0].id);
+      console.log('NAME------------------------------------------>', data[0].name);
+      console.log('USERNAME ------------------------------------->', data[0].owner.login);
+      console.log('URL------------------------------------------->', data[0].html_url);
+      console.log('CREATED AT------------------------------------>', data[0].created_at);
+      console.log('STARGAZERS------------------------------------>', data[0].stargazers_count);
+
+      insertToMongo.save(data);
+    }
+  });
+
+  res.status(200).send('Server post success');
 });
 
 app.get('/repos', function (req, res) {
