@@ -20,20 +20,13 @@ app.post('/repos', function (req, res) {
     if (err) throw err;
     if(!err && res.statusCode === 200) {
       var data = JSON.parse(body);
-
-      console.log('REPO ID--------------------------------------->', data[0].id);
-      console.log('NAME------------------------------------------>', data[0].name);
-      console.log('USERNAME ------------------------------------->', data[0].owner.login);
-      console.log('URL------------------------------------------->', data[0].html_url);
-      console.log('CREATED AT------------------------------------>', data[0].created_at);
-      console.log('STARGAZERS------------------------------------>', data[0].stargazers_count);
-
       insertToMongo.save(data);
     }
   });
-
   res.status(200).send('Server post success');
 });
+
+//helper function
 var bigToSmall = (array) => {
   for (var i = 0; i < array.length - 1; i++) {
     // console.log('bigtosmall', array[i].stars)
@@ -63,28 +56,28 @@ app.get('/repos', function (req, res) {
       result.forEach(rep => {
         var obj = {};
         obj['stars'] = rep.stargazer_count;
+        obj['user'] = rep.username;
+        obj['name'] = rep.repo_name;
         obj['url'] = rep.html_url;
         objResults.push(obj);
       });
       //this orders the array with objects from most stars to least stars
-      var ex = bigToSmall(objResults);
+      var popular = bigToSmall(objResults);
       //stores the top 25 repos (highest stars)
       var topTwentyFive = [];
       for (var i = 0; i < 25; i++) {
-        if (ex[i]) {
-          topTwentyFive.push(ex[i]);
+        if (popular[i]) {
+          topTwentyFive.push(popular[i]);
         }
       }
-      console.log('big2small', ex);
-      console.log('DB RESULTS', objResults);
-      res.status(200).send(topTwentyFive);
+      res.send(topTwentyFive);
     });
   });
 });
-
 
 let port = 1128;
 
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
+
