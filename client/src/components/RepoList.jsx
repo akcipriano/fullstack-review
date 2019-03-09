@@ -5,7 +5,7 @@ const RepoList = (props) => (
     <h4> Top {props.repos.length} Repos </h4>
     {props.repos.map(repo =>
     <div key={repo.url}>
-      <ls>{repo.user} / {repo.name} <br /> Stars: {repo.stars} </ls>
+      <a href={repo.url} target='_blank'>{repo.user} / {repo.name}</a> <br /> Stars: {repo.stars}
     </div>
       )}
   </div>
