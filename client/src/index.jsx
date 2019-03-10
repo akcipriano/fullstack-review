@@ -32,6 +32,7 @@ class App extends React.Component {
       data: {username: term},
       success: (data) => {
         console.log(data);
+        $('#repolist').load('/');
       }
     });
   }

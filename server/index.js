@@ -16,20 +16,19 @@ app.post('/repos', function (req, res) {
   // and get the repo information from the github API, then
   // save the repo information in the database
   var username = req.body.username;
-  getData.getReposByUsername(username, (err, res, body) => {
-    if (err) throw err;
-    if(!err && res.statusCode === 200) {
+  getData.getReposByUsername(username, (error, response, body) => {
+    if (error) throw error;
+    if(!error && response.statusCode === 200) {
       var data = JSON.parse(body);
       insertToMongo.save(data);
+      res.status(200).send('Server post success');
     }
   });
-  res.status(200).send('Server post success');
 });
 
 //helper function
 var bigToSmall = (array) => {
   for (var i = 0; i < array.length - 1; i++) {
-    // console.log('bigtosmall', array[i].stars)
     var big = array[i];
     var small = array[i + 1];
     if(big.stars < small.stars) {
