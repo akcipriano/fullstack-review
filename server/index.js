@@ -45,7 +45,7 @@ var bigToSmall = (array) => {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-  MongoClient.connect(process.env.MONGODB_URI, {useNewUrlParser: true}, function(err, client) {
+  MongoClient.connect(process.env.MONGOLAB_JADE_URI, {useNewUrlParser: true}, function(err, client) {
     if (err) throw err;
     var db = client.db(process.env.DB_NAME);
     db.collection('repos').find().toArray(function(err, result) {
