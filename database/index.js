@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// require('dotenv').config();
 mongoose.connect(process.env.MONGOLAB_JADE_URI, {
   useMongoClient: true
 });
@@ -20,7 +19,6 @@ Repo.on('index', function(err){
 });
 
 let save = (body) => {
-  console.log('SAVE BODY..........', typeof body);
   body.forEach(singleRepo => {
     let sample = new Repo({
       repo_id: singleRepo.id,
