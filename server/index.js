@@ -5,7 +5,7 @@ const insertToMongo = require('../database/index.js');
 var MongoClient = require('mongodb').MongoClient;
 var PORT = process.env.PORT || 3000;
 let app = express();
-require('dotenv').config();
+// require('dotenv').config();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
