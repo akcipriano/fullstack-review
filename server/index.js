@@ -19,8 +19,9 @@ app.post('/repos', function (req, res) {
   // save the repo information in the database
   var username = req.body.username;
   getData.getReposByUsername(username, (error, response, body) => {
-    if (error) throw error;
-    if(!error && response.statusCode === 200) {
+    if (error) {
+      throw error;
+    } else {
       var data = JSON.parse(body);
       insertToMongo.save(data);
       res.status(200).send('Server post success');
