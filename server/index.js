@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const getData = require('../helpers/github.js');
 const insertToMongo = require('../database/index.js');
 var MongoClient = require('mongodb').MongoClient;
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 1128;
 let app = express();
 require('dotenv').config();
 
