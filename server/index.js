@@ -3,7 +3,9 @@ const bodyParser = require('body-parser');
 const getData = require('../helpers/github.js');
 const insertToMongo = require('../database/index.js');
 var MongoClient = require('mongodb').MongoClient;
+let port = process.env.PORT;
 let app = express();
+require('dotenv').config();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -43,10 +45,9 @@ var bigToSmall = (array) => {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-  MongoClient.connect('mongodb://localhost:27017/fetcher', {useNewUrlParser: true}, function(err, client) {
+  MongoClient.connect(process.env.MONGODB_URI, {useNewUrlParser: true}, function(err, client) {
     if (err) throw err;
-
-    var db = client.db('fetcher');
+    var db = client.db(process.env.DB_NAME);
     db.collection('repos').find().toArray(function(err, result) {
       if (err) throw err;
 
@@ -74,7 +75,9 @@ app.get('/repos', function (req, res) {
   });
 });
 
-let port = 1128;
+if (port === null || port === '' || port === undefined) {
+  port = 1128;
+}
 
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
